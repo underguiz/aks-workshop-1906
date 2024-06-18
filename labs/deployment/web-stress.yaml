@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-stress-simulator
+spec:
+  selector:
+    matchLabels:
+      app: web-stress-simulator
+  template:
+    metadata:
+      labels:
+        app: web-stress-simulator
+        workload: web-stress-simulator
+    spec:
+      containers:
+      - name: web-stress-simulator
+        image: flaviostutz/web-stress-simulator
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /web-stress-simulator-1.0.0/cpu?time=100
+            port: 8080
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi

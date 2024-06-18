@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crashloop-app
+spec:
+  selector:
+    matchLabels:
+      app: crashloop-app
+  template:
+    metadata:
+      labels:
+        app: crashloop-app
+    spec:
+      containers:
+      - name: crashloop-app
+        image: nome-do-container-registry.azurecr.io/crashloop:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4449
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
