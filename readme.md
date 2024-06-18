@@ -9,13 +9,17 @@ Para a execução dos Labs é necessário a istalação do ```kubectl``` e ```az
 Kubectl: 
 
 https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
+
 https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
 https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/
 
 Az CLI:
 
 https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows
+
 https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux
+
 https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-macos
 
 ### Criação de um cluster AKS
