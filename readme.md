@@ -146,7 +146,7 @@ Observe os itens monitorados no Grafana.
 
 #### Azure Monitor
 
-Observe os logs utilizando o Container Insights e Log Analytics.
+Observe os logs utilizando o Log Analytics.
 
 #### Kubectl 
 
