@@ -40,7 +40,7 @@ az group create --location "East US" --resource-group "Nome do Resource Group"
 Crie o cluster de AKS.
 
 ```Bash
-az aks create --node-count 2 --node-vm-size Standard_D2s_v5 --name "Nome do Cluster" --resource-group "Nome do Resource Group"
+az aks create --node-count 2 --node-vm-size Standard_B2ms --name "Nome do Cluster" --resource-group "Nome do Resource Group"
 ```
 
 > O processo de criação irá levar de 5 a 10 minutos.
