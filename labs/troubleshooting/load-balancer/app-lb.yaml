@@ -3,7 +3,6 @@ kind: Service
 metadata:
   name: crashloop-app-ilb
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 spec:
   selector:
     app: crashloop-app

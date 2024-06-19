@@ -99,10 +99,10 @@ Observe o objeto criado.
 kubectl get hpa
 ```
 
-Rode um teste de stress contra o Endpoint do simulador de Stress.
+Em uma nova aba ou terminal, rode um teste de stress contra o endpoint do simulador de Stress.
 
 ```Bash
-kubectl run -it artillery --image=artilleryio/artillery -- quick -n 3600 -c 15 "http://web-stress-simulator/web-stress-simulator-1.0.0/cpu?time=100"
+kubectl run -it artillery --image=artilleryio/artillery -- quick -n 3600 -c 50 "http://web-stress-simulator/web-stress-simulator-1.0.0/cpu?time=100"
 ```
 
 Observe que novos Pods são criados respeitando a configuração do HPA.
@@ -116,30 +116,35 @@ kubectl get pods -o wide
 Habilite o Cluser Autoscaler no AKS.
 
 ```Bash
-az aks nodepool update --resource-group "Nome do Resource Group" --cluster-name "Nome do Cluster" --name "Nome do Nodepool" --enable-cluster-autoscaler --min-count 1 --max-count 8
+az aks nodepool update --resource-group "Nome do Resource Group" --cluster-name "Nome do Cluster" --name "nodepool1" --enable-cluster-autoscaler --min-count 1 --max-count 8
 ```
 
 Após a ativação do Cluster Auto Scaler os pods como pending devem se acomodar nos novos nodes.
 
 ```Bash
+kubectl get nodes
 kubectl get pods
+```
+
+Remova o pod do artillery a fim de liberar recursos para o cluster.
+
+```Bash
+kubectl delete pod artillery
 ```
 
 ### Grafana + Prometheus
 
 Habilite o Prometheus + Grafana através do portal.
 
-AKS > Insights > Etc
+> Azure Kubernetes Service > Monitoring > Enable Prometheus / Enable Container Logs / Enable Grafana
 
-Observe os itens monitorados.
+Observe os itens monitorados no Grafana.
+
+> Dashboards > Azure Managed Prometheus
 
 ### Azure Monitor + Logs com Kubectl
 
 #### Azure Monitor
-
-Habilite o Container Insights através do portal.
-
->AKS > Insights > Etc
 
 Observe os logs utilizando o Container Insights e Log Analytics.
 
@@ -183,6 +188,7 @@ Observe que os pods falham ao subir, verifique o erro através dos logs.
 
 ```Bash
 kubectl get pods -l app=crashloop-app
+kubectl logs -l app=crashloop-app
 ```
 
 Após a correção do problema, crie uma nova imagem da aplicação.
@@ -201,40 +207,37 @@ Observe que os pods irão subir normalmente.
 
 ```Bash
 kubectl get pods -l app=crashloop-app
+kubectl logs -l app=crashloop-app
 ```
 
-#### Permissionamento
+#### Indisponibilidade
 
-Crie um serviço do tipo load balancer interno para acessar a aplicação previamente deployada.
+Crie um serviço do tipo load balancer para acessar a aplicação previamente deployada.
 
 ```Bash
-cd ../internal-lb
-kubectl apply -f app-internal-lb.yaml
+cd ../load-balancer
+kubectl apply -f app-lb.yaml
 ```
 
-Observe que o serviço está como pending.
-
-```Bash
-kubectl get svc
-```
-
-Investigue a causa através dos eventos.
-
-```Bash
-kubectl describe svc crashloop-app-ilb
-```
-
-Após o troubleshooting, observe que o serviço será criado.
+Aguarde o serviço ser criado e acesse o EXTERNAL-IP indicado através do navegador.
 
 ```Bash
 kubectl get svc
 ```
+
+A requisição irá sofrer timeout.
 
 ### Debug
 
 É possível acessar os pods em execução para fins de debugs executando o shell de um container.
 
 ```Bash
-kubectl get pods
+kubectl get pods -l app=crashloop-app
 kubectl exec nome-do-pod -it -- /bin/bash
+```
+
+Após a correção do problema identificado (targetPort), aplique a correção no manifesto do serviço e aplique novamente.
+
+```Bash
+kubectl apply -f app-lb.yaml
 ```
