@@ -31,7 +31,7 @@ az login
 az account set --subscription "Nome da Assinatura"
 ```
 
-Crie um resource group para acomodar os recuros .
+Crie um resource group para acomodar os recursos .
 
 ```Bash
 az group create --location "East US" --resource-group "Nome do Resource Group"
@@ -99,7 +99,7 @@ Observe o objeto criado.
 kubectl get hpa
 ```
 
-Em uma nova aba ou terminal, rode um teste de stress contra o endpoint do simulador de Stress.
+**Em uma nova aba ou janela do seu terminal**, rode um teste de stress contra o endpoint do simulador de stress.
 
 ```Bash
 kubectl run -it artillery --image=artilleryio/artillery -- quick -n 3600 -c 50 "http://web-stress-simulator/web-stress-simulator-1.0.0/cpu?time=100"
@@ -111,7 +111,7 @@ Observe que novos Pods são criados respeitando a configuração do HPA.
 kubectl get pods -o wide
 ```
 
-> Alguns pods estarão como pending devido ao fato de não haver recursos para alocar novos pods. 
+> Alguns pods estarão como pending devido ao fato de não haver recursos suficientes nos nodes. 
 
 Habilite o Cluser Autoscaler no AKS.
 
