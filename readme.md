@@ -227,7 +227,7 @@ kubectl get svc
 
 A requisição irá sofrer timeout.
 
-### Debug
+#### Debug
 
 É possível acessar os pods em execução para fins de debugs executando o shell de um container.
 
