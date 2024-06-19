@@ -102,7 +102,13 @@ kubectl get hpa
 **Em uma nova aba ou janela do seu terminal**, rode um teste de stress contra o endpoint do simulador de stress.
 
 ```Bash
-kubectl run -it artillery --image=artilleryio/artillery -- quick -n 3600 -c 50 "http://web-stress-simulator/web-stress-simulator-1.0.0/cpu?time=100"
+kubectl run -it artillery --image=artilleryio/artillery -- quick -n 3600 -c 100 "http://web-stress-simulator/web-stress-simulator-1.0.0/cpu?time=100"
+```
+
+Observe que o HPA irá detectar o uso de CPU e criar mais réplicas.
+
+```Bash
+kubectl get hpa
 ```
 
 Observe que novos Pods são criados respeitando a configuração do HPA.
@@ -111,7 +117,12 @@ Observe que novos Pods são criados respeitando a configuração do HPA.
 kubectl get pods -o wide
 ```
 
-> Alguns pods estarão como pending devido ao fato de não haver recursos suficientes nos nodes. 
+Alguns pods estarão como pending devido ao fato de não haver recursos suficientes nos nodes. Execute o describe em um Pod com o STATUS Pending para verificar esse comportamento.
+
+```Bash
+kubectl get pods -o wide
+kubectl describe pod nome-do-pod
+```
 
 Habilite o Cluser Autoscaler no AKS.
 
@@ -119,11 +130,11 @@ Habilite o Cluser Autoscaler no AKS.
 az aks nodepool update --resource-group "Nome do Resource Group" --cluster-name "Nome do Cluster" --name "nodepool1" --enable-cluster-autoscaler --min-count 1 --max-count 8
 ```
 
-Após a ativação do Cluster Auto Scaler os pods como pending devem se acomodar nos novos nodes.
+Após a ativação do Cluster Auto Scaler os pods como Pending devem se acomodar nos novos nodes. Observe a criação de novos nodes e pods saindo de Pending para Running através dos comandos abaixo.
 
 ```Bash
 kubectl get nodes
-kubectl get pods
+kubectl get pods -o wide
 ```
 
 Remova o pod do artillery a fim de liberar recursos para o cluster.
@@ -134,13 +145,13 @@ kubectl delete pod artillery
 
 ### Grafana + Prometheus
 
-Habilite o Prometheus + Grafana através do portal.
+Habilite o Prometheus + Grafana através do portal. Em Advanced Settings crie novos workspaces pra o Log Analytics e para o Managed Prometheus, 
 
-> Azure Kubernetes Service > Monitoring > Enable Prometheus / Enable Container Logs / Enable Grafana
+> Azure Kubernetes Service > Monitoring > Insights > Enable Prometheus / Enable Container Logs / Enable Grafana
 
-Observe os itens monitorados no Grafana.
+Esse processo deve levar alguns minutos. Após a finalização, observe os itens monitorados no Grafana.
 
-> Dashboards > Azure Managed Prometheus
+> Azure Kubernetes Service > Monitoring > Insights > View Grafana > Dashboards > Azure Managed Prometheus
 
 ### Azure Monitor + Logs com Kubectl
 
